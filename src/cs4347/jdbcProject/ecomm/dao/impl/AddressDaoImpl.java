@@ -25,9 +25,6 @@ public class AddressDaoImpl implements AddressDAO
 	@Override
 	public Address create(Connection connection, Address address, Long customerID) throws SQLException, DAOException {
 		
-		if(address.getAddress1() != null) {
-			throw new DAOException("Trying to insert address with NON-NULL ID");
-		}
 		PreparedStatement ps = null;
 		try {
 				ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
