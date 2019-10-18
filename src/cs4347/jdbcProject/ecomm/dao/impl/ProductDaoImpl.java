@@ -13,8 +13,9 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 
 public class ProductDaoImpl implements ProductDAO
 {
-	private final static String insertProductSQL = "INSERT INTO PRODUCT (name, description, category, upc) VALUES (?, ?, ?, ?)";
-	private final static String selectQuery = "SELECT id, name, description, category, upc FROM product where customer_id =?";
+	private final static String insertProductSQL = "INSERT INTO PRODUCT (name, description, category, upc) VALUES (?, ?, ?, ?);";
+	private final static String selectQuery = "SELECT id, name, description, category, upc FROM product where customer_id =?;";
+
 
 	@Override
 	public Product create(Connection connection, Product product) throws SQLException, DAOException {
@@ -83,10 +84,32 @@ public class ProductDaoImpl implements ProductDAO
 		}
 	}
 
+	final static String updateSQL = "UPDATE product SET name=?, description=?, category=?, upc=? "
+	        + "WHERE id = ?;";
+
 	@Override
 	public int update(Connection connection, Product product) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (product.getId() == null) {
+			throw new DAOException("Trying to update Product with NULL ID");
+		}
+
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(updateSQL);
+			ps.setString(1, product.getProdName());
+			ps.setString(2, product.getProdDescription());
+			ps.setInt(3, product.getProdCategory());
+			ps.setString(4, product.getProdUPC());
+			ps.setLong(5, product.getId());
+
+			int rows = ps.executeUpdate();
+			return rows;
+		}
+		finally {
+			if (ps != null && !ps.isClosed()) {
+				ps.close();
+			}
+		}
 	}
 
 	@Override
