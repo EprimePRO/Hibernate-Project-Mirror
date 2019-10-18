@@ -13,7 +13,7 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 public class AddressDaoImpl implements AddressDAO
 {
 	private static final String insertSQL = 
-			"INSERT INTO ADDRESS (address1, aaddress2, city, state, zipcode) "
+			"INSERT INTO ADDRESS (address1, address2, city, state, zipcode) "
 			+ "VALUES (?, ?, ?, ?, ?);";
 	
 	private final static String selectID = "SELECT id, address1, address2, city, state, zipcode"
