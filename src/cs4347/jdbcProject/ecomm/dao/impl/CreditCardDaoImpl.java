@@ -27,9 +27,7 @@ public class CreditCardDaoImpl implements CreditCardDAO
 	@Override
 	public CreditCard create(Connection connection, CreditCard creditCard, Long customerID)
 			throws SQLException, DAOException {
-		if(creditCard.getCcNumber() != null) {
-			throw new DAOException("Trying to insert Credit Card with NON-NULL ID");
-		}
+
 		PreparedStatement ps = null;
 		try {
 				ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
