@@ -36,7 +36,7 @@ public class AddressDaoImpl implements AddressDAO
 					throw new DAOException("Create Did Not Update Expected Number Of Rows");
 				}
 
-				// REQUIREMENT: Copy the generated auto-increment primary key to the
+				// Copy the generated auto-increment primary key to the
 				// ID.
 				ResultSet keyRS = ps.getGeneratedKeys();
 				keyRS.next();
