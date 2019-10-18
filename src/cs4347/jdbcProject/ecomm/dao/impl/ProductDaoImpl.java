@@ -58,7 +58,7 @@ public class ProductDaoImpl implements ProductDAO
 	@Override
 	public Product retrieve(Connection connection, Long id) throws SQLException, DAOException {
 		if(id == null) {
-			throw new DAOException("Trying to retrieve Customer with NULL ID");
+			throw new DAOException("Trying to retrieve procuct with NULL ID");
 		}
 
 		PreparedStatement ps = null;
@@ -167,10 +167,38 @@ public class ProductDaoImpl implements ProductDAO
 		}
 	}
 
+	final static String upcQuery =
+			"SELECT id, name, description, category, upc "
+			+ "FROM product where upc = ?;";
+
 	@Override
 	public Product retrieveByUPC(Connection connection, String upc) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		if(upc == null) {
+			throw new DAOException("Trying to retrieve product with NULL UPC");
+		}
+
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(selectQuery);
+			ps.setString(1, upc);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				return null;
+			}
+
+			Product prod = new Product();
+			prod.setId(rs.getLong("id"));
+			prod.setProdName(rs.getString("name"));
+			prod.setProdDescription(rs.getString("description"));
+			prod.setProdCategory(rs.getInt("category"));
+			prod.setProdUPC(rs.getString("upc"));
+			return prod;
+		}
+		finally {
+			if (ps != null && !ps.isClosed()) {
+				ps.close();
+			}
+		}
 	}
 
 }
