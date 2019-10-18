@@ -16,10 +16,10 @@ public class AddressDaoImpl implements AddressDAO
 			"INSERT INTO ADDRESS (address1, aaddress2, city, state, zipcode) "
 			+ "VALUES (?, ?, ?, ?, ?);";
 	
-	final static String selectID = "SELECT id, address1, address2, city, state, zipcode"
+	private final static String selectID = "SELECT id, address1, address2, city, state, zipcode"
 	        + "FROM address where id = ?";
 	
-	final static String deleteSQL = "DELETE FROM ADDRESS WHERE ID = ?;";
+	private final static String deleteSQL = "DELETE FROM ADDRESS WHERE ID = ?;";
 	
 	
 	@Override
