@@ -13,7 +13,8 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 
 public class ProductDaoImpl implements ProductDAO
 {
-	private final String insertProductSQL = "INSERT INTO PRODUCT (name, description, category, upc) VALUES (?, ?, ?, ?)";
+	private final static String insertProductSQL = "INSERT INTO PRODUCT (name, description, category, upc) VALUES (?, ?, ?, ?)";
+	private final static String selectQuery = "SELECT id, name, description, category, upc FROM product where customer_id =?";
 
 	@Override
 	public Product create(Connection connection, Product product) throws SQLException, DAOException {
@@ -54,8 +55,32 @@ public class ProductDaoImpl implements ProductDAO
 
 	@Override
 	public Product retrieve(Connection connection, Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		if(id == null) {
+			throw new DAOException("Trying to retrieve Customer with NULL ID");
+		}
+
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(selectQuery);
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				return null;
+			}
+
+			Product prod = new Product();
+			prod.setId(rs.getLong("id"));
+			prod.setProdName(rs.getString("name"));
+			prod.setProdDescription(rs.getString("description"));
+			prod.setProdCategory(rs.getInt("category"));
+			prod.setProdUPC(rs.getString("upc"));
+			return prod;
+		}
+		finally {
+			if (ps != null && !ps.isClosed()) {
+				ps.close();
+			}
+		}
 	}
 
 	@Override
