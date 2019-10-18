@@ -13,9 +13,15 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 public class AddressDaoImpl implements AddressDAO
 {
 	private static final String insertSQL = 
-			"INSERT INTO ADDRESS (address1, aaddress2, city, state, zipcode) "
+			"INSERT INTO ADDRESS (address1, address2, city, state, zipcode) "
 			+ "VALUES (?, ?, ?, ?, ?);";
-
+	
+	private final static String selectID = "SELECT id, address1, address2, city, state, zipcode"
+	        + "FROM address where id = ?";
+	
+	private final static String deleteSQL = "DELETE FROM ADDRESS WHERE ID = ?;";
+	
+	
 	@Override
 	public Address create(Connection connection, Address address, Long customerID) throws SQLException, DAOException {
 		
@@ -57,8 +63,7 @@ public class AddressDaoImpl implements AddressDAO
 
 	@Override
 	public Address retrieveForCustomerID(Connection connection, Long customerID) throws SQLException, DAOException {
-		final String selectID = "SELECT id, address1, address2, city, state, zipcode"
-		        + "FROM address where id = ?";
+		
 		if (customerID == null) {
 			throw new DAOException("Trying to retrieve Customer with NULL ID");
 		}
@@ -89,7 +94,7 @@ public class AddressDaoImpl implements AddressDAO
 
 	@Override
 	public void deleteForCustomerID(Connection connection, Long customerID) throws SQLException, DAOException {
-		final String deleteSQL = "DELETE FROM ADDRESS WHERE ID = ?;";
+		
 		if (customerID == null) {
 			throw new DAOException("Trying to delete address with NULL ID");
 		}
@@ -109,4 +114,3 @@ public class AddressDaoImpl implements AddressDAO
 	}
 
 }
-
