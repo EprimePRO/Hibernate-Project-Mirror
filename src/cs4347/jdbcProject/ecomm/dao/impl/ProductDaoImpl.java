@@ -90,7 +90,7 @@ public class ProductDaoImpl implements ProductDAO
 	@Override
 	public int update(Connection connection, Product product) throws SQLException, DAOException {
 		if (product.getId() == null) {
-			throw new DAOException("Trying to update Product with NULL ID");
+			throw new DAOException("Trying to update product with NULL ID");
 		}
 
 		PreparedStatement ps = null;
@@ -112,10 +112,27 @@ public class ProductDaoImpl implements ProductDAO
 		}
 	}
 
+	private final static String deleteSQL = "DELETE FROM product WHERE id = ?;";
+
 	@Override
 	public int delete(Connection connection, Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return 0;
+		if (id == null) {
+			throw new DAOException("Trying to delete product with NULL ID");
+		}
+
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(deleteSQL);
+			ps.setLong(1, id);
+
+			int rows = ps.executeUpdate();
+			return rows;
+		}
+		finally {
+			if (ps != null && !ps.isClosed()) {
+				ps.close();
+			}
+		}
 	}
 
 	@Override
