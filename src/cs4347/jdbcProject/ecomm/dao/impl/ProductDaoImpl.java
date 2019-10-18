@@ -1,86 +1,61 @@
 package cs4347.jdbcProject.ecomm.dao.impl;
 
-import java.io.IOException;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import cs4347.jdbcProject.ecomm.dao.ProductDAO;
-import cs4347.jdbcProject.ecomm.entity.Customer;
 import cs4347.jdbcProject.ecomm.entity.Product;
-import cs4347.jdbcProject.ecomm.testing.DataSourceManager;
 import cs4347.jdbcProject.ecomm.util.DAOException;
 
 public class ProductDaoImpl implements ProductDAO
 {
+	private final String insertProductSQL = "INSERT INTO PRODUCT (name, description, category, upc) VALUES (?, ?, ?, ?)";
 
 	@Override
 	public Product create(Connection connection, Product product) throws SQLException, DAOException {
-		DataSource ds = null;
-		
-		try {
-			ds = DataSourceManager.getDataSource();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		if(product.getId()!=null) {
+			throw new DAOException("Trying to insert address with NON-NULL ID");
 		}
-		
-		Connection con = ds.getConnection();
+
+		PreparedStatement ps = null;
+
 		try {
-			String query = "INSERT INTO Product (category, description, name, upc)" + "VALUES (?, ?, ?, ?)";
-			PreparedStatement stmt = con.prepareStatement(query);
-			stmt.setLong(1, product.getProdCategory());
-			stmt.setString(2, product.getProdDescription());
-			stmt.setString(3, product.getProdName());
-			stmt.setString(4, product.getProdUPC());
-			
-			stmt.execute();
-			
-			con.close();
-			
-		} catch (Exception e) {
-			System.err.println("Caught an exception");
-			System.err.println(e.getMessage());
+			ps = connection.prepareStatement(insertProductSQL, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, product.getProdName());
+			ps.setString(2, product.getProdDescription());
+			ps.setInt(3, product.getProdCategory());
+			ps.setString(4, product.getProdUPC());
+
+			int result = ps.executeUpdate();
+
+			if(result != 1) {
+				throw new DAOException("Create Did Not Update Expected Number Of Rows");
+			}
+
+			// REQUIREMENT: Copy the generated auto-increment primary key to the
+			// customer ID.
+			ResultSet keyRS = ps.getGeneratedKeys();
+			keyRS.next();
+			int lastKey = keyRS.getInt(1);
+			product.setId((long) lastKey);
+
+			return product;
+		} finally {
+			if(ps != null && !ps.isClosed()) {
+				ps.close();
+			}
 		}
-		return null;
-	} 
+	}
 
 	@Override
 	public Product retrieve(Connection connection, Long id) throws SQLException, DAOException {
-		DataSource ds = null;
-		
-		try {
-			ds = DataSourceManager.getDataSource();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		Connection con = ds.getConnection();
-		try {
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Product WHERE id=" + id);
-			
-			
-			if(rs.next()) {
-				Product product = new Product();
-				
-				
-				product.setId( rs.getLong("id"));
-				product.setProdCategory( rs.getInt("ProdCategory"));
-				product.setProdDescription( rs.getString("ProdDescription"));
-				product.setProdName( rs.getString("ProdName"));
-				product.setProdUPC( rs.getString("ProdUPC"));
-				
-			}
-		}  catch (SQLException ex) {
-            ex.printStackTrace();
-		}
-		return product;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
