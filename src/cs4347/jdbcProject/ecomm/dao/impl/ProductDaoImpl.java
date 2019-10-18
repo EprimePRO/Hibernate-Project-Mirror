@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cs4347.jdbcProject.ecomm.dao.ProductDAO;
@@ -135,10 +136,35 @@ public class ProductDaoImpl implements ProductDAO
 		}
 	}
 
+	final static String categoryQuery =
+			"SELECT id, name, description, category, upc "
+			+ "FROM product where category = ?;";
+
 	@Override
 	public List<Product> retrieveByCategory(Connection connection, int category) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		try {
+			ps = connection.prepareStatement(categoryQuery);
+			ps.setInt(1, category);
+			ResultSet rs = ps.executeQuery();
+
+			List<Product> result = new ArrayList<Product>();
+			while (rs.next()) {
+				Product prod = new Product();
+				prod.setId(rs.getLong("id"));
+				prod.setProdName(rs.getString("name"));
+				prod.setProdDescription(rs.getString("description"));
+				prod.setProdCategory(rs.getInt("category"));
+				prod.setProdUPC(rs.getString("upc"));
+				result.add(prod);
+			}
+			return result;
+		}
+		finally {
+			if (ps != null && !ps.isClosed()) {
+				ps.close();
+			}
+		}
 	}
 
 	@Override
