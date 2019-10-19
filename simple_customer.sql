@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `simple_customer` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `simple_customer`;
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: simple_customer
@@ -23,14 +25,14 @@ DROP TABLE IF EXISTS `address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `address` (
+  `id` int(11) NOT NULL,
   `address1` varchar(45) NOT NULL,
   `address2` varchar(45) DEFAULT NULL,
   `city` varchar(45) NOT NULL,
   `state` varchar(45) NOT NULL,
   `zipcode` varchar(45) NOT NULL,
-  `customerID` int(11) NOT NULL,
-  KEY `customerID1` (`customerID`),
-  CONSTRAINT `customerID1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  PRIMARY KEY (`id`),
+  CONSTRAINT `ADDRESS` FOREIGN KEY (`id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,12 +44,12 @@ DROP TABLE IF EXISTS `creditcard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `creditcard` (
+  `id` int(11) NOT NULL,
   `ccNumber` varchar(45) NOT NULL,
   `expDate` varchar(45) NOT NULL,
   `securityCode` varchar(45) NOT NULL,
-  `customerID` int(11) NOT NULL,
-  KEY `customerID2` (`customerID`),
-  CONSTRAINT `customerID2` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  PRIMARY KEY (`id`),
+  CONSTRAINT `CREDITCARD` FOREIGN KEY (`id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -102,7 +104,7 @@ CREATE TABLE `purchase` (
   PRIMARY KEY (`id`,`customerID`,`productID`),
   KEY `customerID_idx` (`customerID`),
   KEY `productID_idx` (`productID`),
-  CONSTRAINT `customerID3` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`),
+  CONSTRAINT `customerID` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`),
   CONSTRAINT `productID` FOREIGN KEY (`productID`) REFERENCES `product` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -116,4 +118,4 @@ CREATE TABLE `purchase` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-19 13:13:10
+-- Dump completed on 2019-10-19 13:22:56
