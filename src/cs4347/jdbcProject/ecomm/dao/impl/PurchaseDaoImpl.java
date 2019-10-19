@@ -223,7 +223,7 @@ public class PurchaseDaoImpl implements PurchaseDAO
 				pur.setCustomerID(rs.getLong("customerID"));
 				pur.setPurchaseDate(rs.getDate("purchaseDate"));
 				pur.setPurchaseAmount(rs.getDouble("purchaseAmt"));
-				result
+				
 				//not done, need to get the summary
 			}
 			return result;
