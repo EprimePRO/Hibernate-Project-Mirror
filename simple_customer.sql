@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `simple_customer` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `simple_customer`;
 -- MySQL dump 10.13  Distrib 8.0.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: simple_customer
@@ -18,96 +16,49 @@ USE `simple_customer`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `address`
+-- Dumping data for table `address`
 --
 
-DROP TABLE IF EXISTS `address`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `address` (
-  `address1` varchar(45) NOT NULL,
-  `address2` varchar(45) DEFAULT NULL,
-  `city` varchar(45) NOT NULL,
-  `state` varchar(45) NOT NULL,
-  `zipcode` varchar(45) NOT NULL,
-  `customerID` int(11) NOT NULL,
-  KEY `customerID1` (`customerID`),
-  CONSTRAINT `customerID1` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `address` WRITE;
+/*!40000 ALTER TABLE `address` DISABLE KEYS */;
+/*!40000 ALTER TABLE `address` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `creditcard`
+-- Dumping data for table `creditcard`
 --
 
-DROP TABLE IF EXISTS `creditcard`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `creditcard` (
-  `ccNumber` varchar(45) NOT NULL,
-  `expDate` varchar(45) NOT NULL,
-  `securityCode` varchar(45) NOT NULL,
-  `customerID` int(11) NOT NULL,
-  KEY `customerID2` (`customerID`),
-  CONSTRAINT `customerID2` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `creditcard` WRITE;
+/*!40000 ALTER TABLE `creditcard` DISABLE KEYS */;
+/*!40000 ALTER TABLE `creditcard` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `customer`
+-- Dumping data for table `customer`
 --
 
-DROP TABLE IF EXISTS `customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customer` (
-  `id` int(11) NOT NULL,
-  `firstName` varchar(45) NOT NULL,
-  `lastName` varchar(45) NOT NULL,
-  `gender` char(1) NOT NULL,
-  `dob` date NOT NULL,
-  `email` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `product`
+-- Dumping data for table `product`
 --
 
-DROP TABLE IF EXISTS `product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `product` (
-  `id` int(11) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(45) NOT NULL,
-  `category` int(11) NOT NULL,
-  `upc` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `purchase`
+-- Dumping data for table `purchase`
 --
 
-DROP TABLE IF EXISTS `purchase`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `purchase` (
-  `id` int(11) NOT NULL,
-  `productID` int(11) NOT NULL,
-  `customerID` int(11) NOT NULL,
-  `purchaseDate` date NOT NULL,
-  `purchaseAmt` float NOT NULL,
-  PRIMARY KEY (`id`,`customerID`,`productID`),
-  KEY `customerID_idx` (`customerID`),
-  KEY `productID_idx` (`productID`),
-  CONSTRAINT `customerID3` FOREIGN KEY (`customerID`) REFERENCES `customer` (`id`),
-  CONSTRAINT `productID` FOREIGN KEY (`productID`) REFERENCES `product` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `purchase` WRITE;
+/*!40000 ALTER TABLE `purchase` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchase` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -118,4 +69,4 @@ CREATE TABLE `purchase` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-18  1:36:42
+-- Dump completed on 2019-10-19 13:07:13
