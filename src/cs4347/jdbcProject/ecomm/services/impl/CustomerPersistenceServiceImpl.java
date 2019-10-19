@@ -27,15 +27,15 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	{
 		this.dataSource = dataSource;
 	}
-	
+
 	/**
 	 * This method provided as an example of transaction support across multiple inserts.
-	 * 
-	 * Persists a new Customer instance by inserting new Customer, Address, 
-	 * and CreditCard instances. Notice the transactional nature of this 
-	 * method which inludes turning off autocommit at the start of the 
-	 * process, and rolling back the transaction if an exception 
-	 * is caught. 
+	 *
+	 * Persists a new Customer instance by inserting new Customer, Address,
+	 * and CreditCard instances. Notice the transactional nature of this
+	 * method which inludes turning off autocommit at the start of the
+	 * process, and rolling back the transaction if an exception
+	 * is caught.
 	 */
 	@Override
 	public Customer create(Customer customer) throws SQLException, DAOException
