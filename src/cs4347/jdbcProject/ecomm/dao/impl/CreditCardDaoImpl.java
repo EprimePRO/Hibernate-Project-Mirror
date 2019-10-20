@@ -27,7 +27,9 @@ public class CreditCardDaoImpl implements CreditCardDAO
 	@Override
 	public CreditCard create(Connection connection, CreditCard creditCard, Long customerID)
 			throws SQLException, DAOException {
-
+		if(creditCard.getCcNumber() != null) {
+			throw new DAOException("Trying to insert Credit Card with NON-NULL ID");
+		}
 		PreparedStatement ps = null;
 		try {
 				ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
@@ -40,6 +42,13 @@ public class CreditCardDaoImpl implements CreditCardDAO
 					throw new DAOException("Create Did Not Update Expected Number Of Rows");
 				}
 
+				// REQUIREMENT: Copy the generated auto-increment primary key to the
+				// ID.
+				ResultSet keyRS = ps.getGeneratedKeys();
+				keyRS.next();
+				int lastKey = keyRS.getInt(1);
+				creditCard.setID(lastKey);
+
 				return creditCard;
 			}
 			finally {
@@ -47,6 +56,9 @@ public class CreditCardDaoImpl implements CreditCardDAO
 					ps.close();
 				}
 			}
+		
+		
+		return null;
 	}
 
 	@Override

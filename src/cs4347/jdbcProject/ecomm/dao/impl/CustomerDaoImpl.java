@@ -3,7 +3,6 @@ package cs4347.jdbcProject.ecomm.dao.impl;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,145 +12,69 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import cs4347.jdbcProject.ecomm.dao.CustomerDAO;
-
+import cs4347.jdbcProject.ecomm.entity.Address;
 import cs4347.jdbcProject.ecomm.entity.Customer;
-import cs4347.jdbcProject.ecomm.entity.Product;
 import cs4347.jdbcProject.ecomm.testing.DataSourceManager;
 import cs4347.jdbcProject.ecomm.util.DAOException;
 
 public class CustomerDaoImpl implements CustomerDAO
 {
-	
-	private static final String insertCustomerSQL = 
-			"INSERT INTO Customer (firstName, lastName, dob, email, gender) "
-			+ "VALUES (?, ?, ?, ?, ?);";
-	
-	private final static String selectQuery = "SELECT id, firstName, lastName, dob, email, gender FROM Customer where id =?;";
-	
-	
-	
-	
 
 	@Override
 	public Customer create(Connection connection, Customer customer) throws SQLException, DAOException {
-		if(customer.getId()!=null) {
-			throw new DAOException("Trying to insert customer with NON-NULL ID");
-		}
-		
-		PreparedStatement ps = null;
-
-		try {
-			ps = connection.prepareStatement(insertCustomerSQL, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, customer.getFirstName());
-			ps.setString(2, customer.getLastName());
-			ps.setDate(3, customer.getDob());
-			ps.setString(4, customer.getEmail());
-			ps.setLong(5, customer.getGender());
-
-			int result = ps.executeUpdate();
-
-			if(result != 1) {
-				throw new DAOException("Create Did Not Update Expected Number Of Rows");
-			}
-
-			// REQUIREMENT: Copy the generated auto-increment primary key to the
-			// customer ID.
-			ResultSet keyRS = ps.getGeneratedKeys();
-			keyRS.next();
-			int lastKey = keyRS.getInt(1);
-			customer.setId((long) lastKey);
-
-			return customer;
-		} finally {
-			if(ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-		}
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Customer retrieve(Connection connection, Long id) throws SQLException, DAOException {
-		if(id == null) {
-			throw new DAOException("Trying to retrieve customer with NULL ID");
-		}
-
-		PreparedStatement ps = null;
+		DataSource ds = null;
+		
 		try {
-			ps = connection.prepareStatement(selectQuery);
-			ps.setLong(1, id);
-			ResultSet rs = ps.executeQuery();
-			if (!rs.next()) {
-				return null;
-			}
-
-			Customer cust = new Customer();
-			cust.setId(rs.getLong("id"));
-			cust.setFirstName(rs.getString("firstName"));
-			cust.setLastName(rs.getString("lastName"));
-			cust.setGender((char) rs.getLong("gender"));
-			cust.setDob(rs.getDate("dob"));
-			cust.setEmail(rs.getString("email"));
-			return cust;
+			ds = DataSourceManager.getDataSource();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		finally {
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
+		
+		Connection con = ds.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Customer WHERE id=" + id + "INNER JOIN Address ON Customer.addressId = Address.id");
+			
+			
+			if(rs.next()) {
+				Customer customer = new Customer();
+				
+				
+				customer.setId( rs.getLong("id"));
+				customer.setFirstName( rs.getString("firstName"));
+				customer.setLastName( rs.getString("lastName"));
+				customer.setGender( rs.getString("gender").charAt(0));
+				customer.setEmail( rs.getString("email"));
+				customer.setDob(rs.getDate("dob"));
+				
 			}
+		}  catch (SQLException ex) {
+            ex.printStackTrace();
+		
+			
 		}
+		return null;
 	}
 
-	final static String updateSQL = "UPDATE product SET firstName=?, lastName=?, dob=?, email=?, gender=? "
-	        + "WHERE id = ?;";
 	@Override
 	public int update(Connection connection, Customer customer) throws SQLException, DAOException {
-		if (customer.getId() == null) {
-			throw new DAOException("Trying to update customer with NULL ID");
-		}
-
-		PreparedStatement ps = null;
-		try {
-			ps = connection.prepareStatement(updateSQL);
-			ps.setString(1, customer.getFirstName());
-			ps.setString(2, customer.getLastName());
-			ps.setDate(3, customer.getDob());
-			ps.setString(4, customer.getEmail());
-			ps.setLong(5, customer.getGender());
-			ps.setLong(6, customer.getId());
-
-			int rows = ps.executeUpdate();
-			return rows;
-		}
-		finally {
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-		}
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-	private final static String deleteSQL = "DELETE FROM customer WHERE id = ?;";
-	
 	@Override
 	public int delete(Connection connection, Long id) throws SQLException, DAOException {
-		if (id == null) {
-			throw new DAOException("Trying to delete customer with NULL ID");
-		}
-
-		PreparedStatement ps = null;
-		try {
-			ps = connection.prepareStatement(deleteSQL);
-			ps.setLong(1, id);
-
-			int rows = ps.executeUpdate();
-			return rows;
-		}
-		finally {
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-		}
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-	
 	@Override
 	public List<Customer> retrieveByZipCode(Connection connection, String zipCode) throws SQLException, DAOException {
 		DataSource ds = null;
@@ -189,44 +112,11 @@ public class CustomerDaoImpl implements CustomerDAO
 		
 	}
 
-	private final static String retrieveDOBSQL = "SELECT id, firstName, lastName, dob, email, gender "
-			+ "FROM Customer where dob BETWEEN ? AND ?;";
-	
-	public List<Customer> retrieveByDOB(Connection connection, Date startDate, Date endDate)throws SQLException, DAOException{
-		if(startDate == null) {
-			throw new DAOException("Trying to retrieve product with NULL START DATE");
-		}
-		if(endDate == null) {
-			throw new DAOException("Trying to retrieve product with NULL END DATE");
-		}
-		List<Customer> ll = new LinkedList<Customer>();
-	
-		PreparedStatement ps = null;
-		try {
-			ps = connection.prepareStatement(retrieveDOBSQL);
-			ps.setDate(1, startDate);
-			ps.setDate(2,  endDate);
-			ResultSet rs = ps.executeQuery();
-			if (!rs.next()) {
-				return null;
-			}
-			while(rs.next()) {
-				Customer cust = new Customer();
-				cust.setId(rs.getLong("id"));
-				cust.setFirstName(rs.getString("firstName"));
-				cust.setLastName(rs.getString("lastName"));
-				cust.setGender((char) rs.getLong("gender"));
-				cust.setDob(rs.getDate("dob"));
-				cust.setEmail(rs.getString("email"));
-				ll.add(cust);
-			}
-			return ll;
-		}
-		finally {
-			if (ps != null && !ps.isClosed()) {
-				ps.close();
-			}
-		}
+	@Override
+	public List<Customer> retrieveByDOB(Connection connection, Date startDate, Date endDate)
+			throws SQLException, DAOException {
+		
+		return null;
 	}
 	
 }

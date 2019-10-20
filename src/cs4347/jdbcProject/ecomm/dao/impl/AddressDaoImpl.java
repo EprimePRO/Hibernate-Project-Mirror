@@ -39,6 +39,13 @@ public class AddressDaoImpl implements AddressDAO
 					throw new DAOException("Create Did Not Update Expected Number Of Rows");
 				}
 
+				// REQUIREMENT: Copy the generated auto-increment primary key to the
+				// ID.
+				ResultSet keyRS = ps.getGeneratedKeys();
+				keyRS.next();
+				int lastKey = keyRS.getInt(1);
+				address.setID(lastKey);
+
 				return address;
 			}
 			finally {
@@ -46,6 +53,9 @@ public class AddressDaoImpl implements AddressDAO
 					ps.close();
 				}
 			}
+		
+		
+		return null;
 	}
 
 	@Override
