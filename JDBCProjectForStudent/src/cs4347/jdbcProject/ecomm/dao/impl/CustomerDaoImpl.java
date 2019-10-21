@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -154,12 +155,12 @@ public class CustomerDaoImpl implements CustomerDAO
 	@Override
 	public List<Customer> retrieveByZipCode(Connection connection, String zipCode) throws SQLException, DAOException {
 		DataSource ds = null;
-		List<Customer> ll = new LinkedList<Customer>();
+		List<Customer> ll = new ArrayList<Customer>();
 		PreparedStatement ps = null;	//Creates SQL Statement
 		
 		try {
 			//Retrieve all aspects from Customer where the Customer's Address has a certain Zip-Code
-			ps = connection.prepareStatement("SELECT * FROM Customer INNER JOIN Address ON Customer.addressID = Address.id WHERE zipcode =?");
+			ps = connection.prepareStatement("SELECT * FROM Customer INNER JOIN Address ON Customer.id = Address.id WHERE zipcode =?;");
 			ps.setString(1, zipCode);
 			
 			ResultSet rs = ps.executeQuery();
@@ -175,15 +176,15 @@ public class CustomerDaoImpl implements CustomerDAO
 				customer.setDob(rs.getDate("dob"));
 				
 				ll.add(customer);
+				
 			}
-		} catch(SQLException e){
-			e.printStackTrace();
+			
+			return ll;
 		} finally {
 			if (ps != null && !ps.isClosed()) {
 				ps.close();
 			}
 		}
-		return ll;
 		
 	}
 

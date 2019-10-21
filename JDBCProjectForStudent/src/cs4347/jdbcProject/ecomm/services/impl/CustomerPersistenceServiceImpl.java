@@ -91,15 +91,14 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 			connection.setAutoCommit(false);
 			Customer cust = customerDAO.retrieve(connection, id);
 
+			cust.setAddress(addressDAO.retrieveForCustomerID(connection, cust.getId()));
 			if (cust.getAddress() == null) {
 				throw new DAOException("Customers must include an Address instance.");
 			}
-			Address address = cust.getAddress();
-
-			if (cust.getCreditCard() == null) {
-				throw new DAOException("Customers must include a CreditCard instance.");
+			cust.setCreditCard(creditCardDAO.retrieveForCustomerID(connection, cust.getId()));
+			if (cust.getAddress() == null) {
+				throw new DAOException("Customers must include an Address instance.");
 			}
-			CreditCard creditCard = cust.getCreditCard();
 
 			connection.commit();
 			return cust;
@@ -133,11 +132,23 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	@Override
 	public List<Customer> retrieveByZipCode(String zipCode) throws SQLException, DAOException {
 		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
 
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
 			List<Customer> cust = customerDAO.retrieveByZipCode(connection, zipCode);
+			for(Customer c: cust) {
+				c.setAddress(addressDAO.retrieveForCustomerID(connection, c.getId()));
+				if (c.getAddress() == null) {
+					throw new DAOException("Customers must include an Address instance.");
+				}
+				c.setCreditCard(creditCardDAO.retrieveForCustomerID(connection, c.getId()));
+				if (c.getAddress() == null) {
+					throw new DAOException("Customers must include an Address instance.");
+				}
+			}
 			connection.commit();
 			return cust;
 		}
@@ -158,11 +169,23 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	@Override
 	public List<Customer> retrieveByDOB(Date startDate, Date endDate) throws SQLException, DAOException {
 		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
 
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
 			List<Customer> cust = customerDAO.retrieveByDOB(connection, startDate, endDate);
+			for(Customer c: cust) {
+				c.setAddress(addressDAO.retrieveForCustomerID(connection, c.getId()));
+				if (c.getAddress() == null) {
+					throw new DAOException("Customers must include an Address instance.");
+				}
+				c.setCreditCard(creditCardDAO.retrieveForCustomerID(connection, c.getId()));
+				if (c.getAddress() == null) {
+					throw new DAOException("Customers must include an Address instance.");
+				}
+			}
 			connection.commit();
 			return cust;
 		}
