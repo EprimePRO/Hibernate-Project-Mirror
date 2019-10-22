@@ -123,6 +123,9 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 		AddressDAO addressDAO = new AddressDaoImpl();
 		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
 		
+		adress.Dao.deletebycustomerid(customer.getid());
+		adress.Dao.insert(customer.getadress);
+		
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
