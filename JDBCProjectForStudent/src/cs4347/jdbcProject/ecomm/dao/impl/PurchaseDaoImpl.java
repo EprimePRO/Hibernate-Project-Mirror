@@ -16,36 +16,35 @@ import cs4347.jdbcProject.ecomm.util.DAOException;
 
 public class PurchaseDaoImpl implements PurchaseDAO
 {
-	
+
 	private static final String insertSQL = 
 			"INSERT INTO Purchase (productID, customerID, purchaseDate, purchaseAmt) "
 			+ "VALUES (?, ?, ?, ?);";
-	
+
 	private final static String selectID = "SELECT id, productID, customerID, purchaseDate, purchaseAmt "
 	        + "FROM Purchase where id = ?";
-	
+
 	private final static String deleteSQL = "DELETE FROM purchase WHERE ID = ?;";
-	
+
 	private final static String updateSQL = "UPDATE purchase SET productID = ?, customerID = ?, purchaseDate = ?, purchaseAmt = ? "
 	        + "WHERE id = ?;";
-	
+
 	private final static String selectListC = "SELECT id, productID, customerID, purchaseDate, purchaseAmt "
 			        + "FROM Purchase where customerID = ?;";
-	
+
 	private final static String selectListP = "SELECT id, productID, customerID, purchaseDate, purchaseAmt "
 	        + "FROM Purchase where productID = ?;";
 	
-	private final static String selectSummary = "SELECT id, productID, customerID, purchaseDate, purchaseAmt "
-	        + "FROM Purchase where customerID = ?;";
-	
+	private final static String purchaseSummary = "SELECT min(purchaseAmt), max(purchaseAmt), Avg(purchaseAmt) "
+			+ "FROM Purchase where customerID = ?";
 
 	@Override
 	public Purchase create(Connection connection, Purchase purchase) throws SQLException, DAOException {
-		
+
 		if(purchase.getId()!=null) {
 			throw new DAOException("Trying to insert purchase with NON-NULL ID");
 		}
-		
+
 		PreparedStatement ps = null;
 		try {
 				ps = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
@@ -107,7 +106,7 @@ public class PurchaseDaoImpl implements PurchaseDAO
 
 	@Override
 	public int update(Connection connection, Purchase purchase) throws SQLException, DAOException {
-		
+
 		if (purchase.getId() == null) {
 			throw new DAOException("Trying to update purchase with NULL ID");
 		}
@@ -155,7 +154,7 @@ public class PurchaseDaoImpl implements PurchaseDAO
 	@Override
 	public List<Purchase> retrieveForCustomerID(Connection connection, Long customerID)
 			throws SQLException, DAOException {
-		
+
 		PreparedStatement ps = null;
 		try {
 			ps = connection.prepareStatement(selectListC);
@@ -184,7 +183,7 @@ public class PurchaseDaoImpl implements PurchaseDAO
 	@Override
 	public List<Purchase> retrieveForProductID(Connection connection, Long productID)
 			throws SQLException, DAOException {
-		
+
 		PreparedStatement ps = null;
 		try {
 			ps = connection.prepareStatement(selectListP);
@@ -215,22 +214,17 @@ public class PurchaseDaoImpl implements PurchaseDAO
 			throws SQLException, DAOException {
 		PreparedStatement ps = null;
 		try {
-			ps = connection.prepareStatement(selectSummary);
+			ps = connection.prepareStatement(purchaseSummary);
 			ps.setLong(1, customerID);
 			ResultSet rs = ps.executeQuery();
+			
+			PurchaseSummary sum = new PurchaseSummary();
+	
+			sum.minPurchase = (rs.getFloat("min(purchaseAmt)"));
+			sum.maxPurchase = (rs.getFloat("max(purchaseAmt)"));
+			sum.avgPurchase = (rs.getFloat("avg(purchaseAmt)"));
 
-			PurchaseSummary result = new PurchaseSummary();
-			while (rs.next()) {
-				Purchase pur = new Purchase();
-				pur.setId(rs.getLong("id"));
-				pur.setProductID(rs.getLong("productID"));
-				pur.setCustomerID(rs.getLong("customerID"));
-				pur.setPurchaseDate(rs.getDate("purchaseDate"));
-				pur.setPurchaseAmount(rs.getDouble("purchaseAmt"));
-				
-				//not done, need to get the summary
-			}
-			return result;
+			return sum;
 		}
 		finally {
 			if (ps != null && !ps.isClosed()) {
