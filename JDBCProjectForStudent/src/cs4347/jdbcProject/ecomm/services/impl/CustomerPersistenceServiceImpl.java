@@ -127,11 +127,12 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 		try {
 			connection.setAutoCommit(false);
 			int row = customerDAO.update(connection, customer);
-			connection.commit();
-			return row;
-			
 			address.Dao.deletebycustomerid(customer.getid());
 			address.Dao.insert(customer.getaddress);
+			creditcard.Dao.deletebycustomerid(customer.getid());
+			creditcard.Dao.insert(customer.getadress);
+			connection.commit();
+			return row;
 		}
 		catch (Exception ex) {
 			connection.rollback();
