@@ -123,7 +123,7 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
-			int row = CustomerDAO.update(connection, customer);
+			int row = customerDAO.update(connection, customer);
 			connection.commit();
 			return row;
 		}
@@ -139,7 +139,6 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 				connection.close();
 			}
 		}
-		return 0;
 	}	
 
 	@Override
@@ -148,7 +147,7 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
-			int row = CustomerDAO.delete(connection, id);
+			int row = customerDAO.delete(connection, id);
 			connection.commit();
 			return row;
 		}
@@ -164,7 +163,6 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 				connection.close();
 			}
 		}
-		return 0;
 	}
 
 	@Override
