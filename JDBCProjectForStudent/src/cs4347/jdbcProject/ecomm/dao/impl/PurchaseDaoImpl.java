@@ -219,11 +219,10 @@ public class PurchaseDaoImpl implements PurchaseDAO
 			ResultSet rs = ps.executeQuery();
 			
 			PurchaseSummary sum = new PurchaseSummary();
-	
-			sum.minPurchase = (rs.getFloat("min(purchaseAmt)"));
-			sum.maxPurchase = (rs.getFloat("max(purchaseAmt)"));
-			sum.avgPurchase = (rs.getFloat("avg(purchaseAmt)"));
-
+			
+			sum.minPurchase = (float) (rs.getDouble("min(purchaseAmt)"));
+			sum.maxPurchase = (float) (rs.getDouble("max(purchaseAmt)"));
+			sum.avgPurchase = (float) (rs.getDouble("avg(purchaseAmt)"));
 			return sum;
 		}
 		finally {
