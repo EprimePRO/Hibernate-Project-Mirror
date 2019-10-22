@@ -130,8 +130,8 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 			connection.commit();
 			return row;
 			
-			adress.Dao.deletebycustomerid(customer.getid());
-			adress.Dao.insert(customer.getadress);
+			address.Dao.deletebycustomerid(customer.getid());
+			address.Dao.insert(customer.getaddress);
 		}
 		catch (Exception ex) {
 			connection.rollback();
