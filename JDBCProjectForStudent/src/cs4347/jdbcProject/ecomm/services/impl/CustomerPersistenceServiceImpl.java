@@ -129,8 +129,8 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 			int row = customerDAO.update(connection, customer);
 			address.Dao.deletebycustomerid(customer.getid());
 			address.Dao.insert(customer.getaddress);
-			creditcard.Dao.deletebycustomerid(customer.getid());
-			creditcard.Dao.insert(customer.getadress);
+			creditCard.Dao.deletebycustomerid(customer.getid());
+			creditCard.Dao.insert(customer.getadress);
 			connection.commit();
 			return row;
 		}
