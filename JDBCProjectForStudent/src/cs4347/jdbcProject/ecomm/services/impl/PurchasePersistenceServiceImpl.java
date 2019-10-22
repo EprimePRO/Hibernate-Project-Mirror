@@ -147,8 +147,26 @@ public class PurchasePersistenceServiceImpl implements PurchasePersistenceServic
 
 	@Override
 	public PurchaseSummary retrievePurchaseSummary(Long customerID) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		PurchaseDAO PurchaseDAO = new PurchaseDaoImpl();
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			PurchaseSummary result = PurchaseDAO.retrievePurchaseSummary(connection, customerID);
+			connection.commit();
+			return result;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 	}
 
 	@Override
