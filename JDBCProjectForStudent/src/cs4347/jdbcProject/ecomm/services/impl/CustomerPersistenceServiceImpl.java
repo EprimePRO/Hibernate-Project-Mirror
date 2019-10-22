@@ -119,13 +119,51 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 
 	@Override
 	public int update(Customer customer) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			int row = CustomerDAO.update(connection, customer);
+			connection.commit();
+			return row;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 		return 0;
-	}
+	}	
 
 	@Override
 	public int delete(Long id) throws SQLException, DAOException {
-		// TODO Auto-generated method stub
+		CustomerDAO customerDAO = new CustomerDaoImpl();
+		Connection connection = dataSource.getConnection();
+		try {
+			connection.setAutoCommit(false);
+			int row = CustomerDAO.delete(connection, id);
+			connection.commit();
+			return row;
+		}
+		catch (Exception ex) {
+			connection.rollback();
+			throw ex;
+		}
+		finally {
+			if (connection != null) {
+				connection.setAutoCommit(true);
+			}
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		}
 		return 0;
 	}
 
@@ -151,53 +189,6 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 			}
 			connection.commit();
 			return cust;
-		}
-		catch (Exception ex) {
-			connection.rollback();
-			throw ex;
-		}
-		finally {
-			if (connection != null) {
-				connection.setAutoCommit(true);
-			}
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		}
-	}
-	@Override
-	public int update(Customer customer) throws SQLException, DAOException {
-		CustomerDAO customerDAO = new CustomerDaoImpl();
-		Connection connection = dataSource.getConnection();
-		try {
-			connection.setAutoCommit(false);
-			int row = CustomerDAO.update(connection, customer);
-			connection.commit();
-			return row;
-		}
-		catch (Exception ex) {
-			connection.rollback();
-			throw ex;
-		}
-		finally {
-			if (connection != null) {
-				connection.setAutoCommit(true);
-			}
-			if (connection != null && !connection.isClosed()) {
-				connection.close();
-			}
-		}
-	}
-
-	@Override
-	public int delete(Long id) throws SQLException, DAOException {
-		CustomerDAO customerDAO = new CustomerDaoImpl();
-		Connection connection = dataSource.getConnection();
-		try {
-			connection.setAutoCommit(false);
-			int row = CustomerDAO.delete(connection, id);
-			connection.commit();
-			return row;
 		}
 		catch (Exception ex) {
 			connection.rollback();
