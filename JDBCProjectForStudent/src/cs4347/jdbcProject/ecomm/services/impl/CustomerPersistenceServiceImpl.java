@@ -120,6 +120,9 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	@Override
 	public int update(Customer customer) throws SQLException, DAOException {
 		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
+		
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
@@ -144,6 +147,9 @@ public class CustomerPersistenceServiceImpl implements CustomerPersistenceServic
 	@Override
 	public int delete(Long id) throws SQLException, DAOException {
 		CustomerDAO customerDAO = new CustomerDaoImpl();
+		AddressDAO addressDAO = new AddressDaoImpl();
+		CreditCardDAO creditCardDAO = new CreditCardDaoImpl();
+		
 		Connection connection = dataSource.getConnection();
 		try {
 			connection.setAutoCommit(false);
