@@ -62,6 +62,7 @@ public class Purchase
 	{
 		this.purchaseAmount = purchaseAmount;
 	}
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	public Customer getCustomer()
 	{
@@ -72,6 +73,7 @@ public class Purchase
 	{
 		this.customer = customer;
 	}
+	
 	@OneToOne(fetch = FetchType.EAGER)
 	public Product getProduct()
 	{
