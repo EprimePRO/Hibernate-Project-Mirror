@@ -13,6 +13,16 @@ package cs4347.hibernateProject.ecomm.entity;
 
 import java.sql.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "purchase")
 public class Purchase 
 {
 	private Long id;
@@ -20,7 +30,9 @@ public class Purchase
 	private double purchaseAmount;
 	private Customer customer;
 	private Product product;
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId()
 	{
 		return id;
@@ -50,7 +62,7 @@ public class Purchase
 	{
 		this.purchaseAmount = purchaseAmount;
 	}
-
+	@OneToOne(fetch = FetchType.EAGER)
 	public Customer getCustomer()
 	{
 		return customer;
@@ -60,7 +72,7 @@ public class Purchase
 	{
 		this.customer = customer;
 	}
-
+	@OneToOne(fetch = FetchType.EAGER)
 	public Product getProduct()
 	{
 		return product;
