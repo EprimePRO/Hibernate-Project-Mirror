@@ -13,6 +13,17 @@ package cs4347.hibernateProject.ecomm.entity;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "customer")
 public class Customer 
 {
 	private Long id;
@@ -24,6 +35,8 @@ public class Customer
 	private Address address;
 	private CreditCard creditCard;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId()
 	{
 		return id;
@@ -84,6 +97,7 @@ public class Customer
 		this.email = email;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public Address getAddress()
 	{
 		return address;
@@ -93,7 +107,7 @@ public class Customer
 	{
 		this.address = address;
 	}
-
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public CreditCard getCreditCard()
 	{
 		return creditCard;
