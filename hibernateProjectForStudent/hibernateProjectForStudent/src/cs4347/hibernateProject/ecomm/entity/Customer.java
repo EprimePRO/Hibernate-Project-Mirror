@@ -107,6 +107,7 @@ public class Customer
 	{
 		this.address = address;
 	}
+	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public CreditCard getCreditCard()
 	{
