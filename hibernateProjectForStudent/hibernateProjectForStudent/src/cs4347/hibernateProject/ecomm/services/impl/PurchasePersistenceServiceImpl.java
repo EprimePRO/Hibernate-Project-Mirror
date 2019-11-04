@@ -34,39 +34,93 @@ public class PurchasePersistenceServiceImpl implements PurchasePersistenceServic
 	@Override
 	public void create(Purchase purchase) throws SQLException, DAOException
 	{
+		try {
+			em.getTransaction().begin();
+			em.persist(purchase);
+			em.getTransaction().commit();
+		}
+		catch (Exception ex) {
+			em.getTransaction().rollback();
+			throw ex;
+		}
 	}
 
 	@Override
 	public Purchase retrieve(Long id) throws SQLException, DAOException
 	{
-		return null;
+		try {
+			em.getTransaction().begin();
+			Purchase pur = em.find(Purchase.class, id);
+			em.getTransaction().commit();
+			return pur;
+		}
+		catch (Exception ex) {
+			em.getTransaction().rollback();
+			throw ex;
+		}
 	}
 
 	@Override
 	public void update(Purchase purchase) throws SQLException, DAOException
 	{
+		try {
+			em.getTransaction().begin();
+			Purchase p2 = em.find(Purchase.class, purchase.getId());
+			p2.setPurchaseAmount(purchase.getPurchaseAmount());
+			p2.setPurchaseDate(purchase.getPurchaseDate());
+			em.getTransaction().commit();
+		}
+		catch (Exception ex) {
+			em.getTransaction().rollback();
+			throw ex;
+		}
 	}
 
 	@Override
 	public void delete(Long id) throws SQLException, DAOException
 	{
+		try {
+			em.getTransaction().begin();
+			Purchase p2 = em.find(Purchase.class, id);
+			em.remove(p2);
+			em.getTransaction().commit();
+		}
+		catch (Exception ex) {
+			em.getTransaction().rollback();
+			throw ex;
+		}
 	}
 
 	@Override
 	public List<Purchase> retrieveForCustomerID(Long customerID) throws SQLException, DAOException
 	{
-		return null;
+		em.getTransaction().begin();
+		List<Purchase> emps = (List<Purchase>)em.createQuery("from Purchase as p where p.customer.id = :customerID")
+			.setParameter("customerID", customerID)
+			.getResultList();
+		em.getTransaction().commit();
+		return emps;
 	}
 
 	@Override
 	public PurchaseSummary retrievePurchaseSummary(Long customerID) throws SQLException, DAOException
 	{
-		return null;
+		em.getTransaction().begin();
+		PurchaseSummary emps = (PurchaseSummary)em.createQuery("from Purchase as p where p.customer.id = :customerID")
+			.setParameter("customerID", customerID)
+			.getResultList();
+		em.getTransaction().commit();
+		return emps;
 	}
 
 	@Override
 	public List<Purchase> retrieveForProductID(Long productID) throws SQLException, DAOException
 	{
-		return null;
+		em.getTransaction().begin();
+		List<Purchase> emps = (List<Purchase>)em.createQuery("from Purchase as p where p.product.id = :productID")
+			.setParameter("productID", productID)
+			.getResultList();
+		em.getTransaction().commit();
+		return emps;
 	}
 }
