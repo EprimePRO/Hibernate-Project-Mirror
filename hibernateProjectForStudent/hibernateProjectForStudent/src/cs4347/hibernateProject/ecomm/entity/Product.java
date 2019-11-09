@@ -8,32 +8,24 @@
  * Sharing project materials or using shared materials will also result 
  * in the reporting of all team members for academic dishonesty. 
  */ 
-
+ 
 package cs4347.hibernateProject.ecomm.entity;
 
-import java.sql.Date;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "customer")
-public class Customer 
+@Table(name = "product")
+public class Product 
 {
 	private Long id;
-	private String firstName;
-	private String lastName;
-	private Character gender;
-	private Date dob;
-	private String email;
-	private Address address;
-	private CreditCard creditCard;
+	private String prodName;
+	private String prodDescription;
+	private int prodCategory;
+	private String prodUPC;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,74 +39,44 @@ public class Customer
 		this.id = id;
 	}
 
-	public String getFirstName()
+	public String getProdName()
 	{
-		return firstName;
+		return prodName;
 	}
 
-	public void setFirstName(String firstName)
+	public void setProdName(String prodName)
 	{
-		this.firstName = firstName;
+		this.prodName = prodName;
 	}
 
-	public String getLastName()
+	public String getProdDescription()
 	{
-		return lastName;
+		return prodDescription;
 	}
 
-	public void setLastName(String lastName)
+	public void setProdDescription(String prodDescription)
 	{
-		this.lastName = lastName;
+		this.prodDescription = prodDescription;
 	}
 
-	public Character getGender()
+	public int getProdCategory()
 	{
-		return gender;
+		return prodCategory;
 	}
 
-	public void setGender(Character gender)
+	public void setProdCategory(int prodCategory)
 	{
-		this.gender = gender;
+		this.prodCategory = prodCategory;
 	}
 
-	public Date getDob()
+	public String getProdUPC()
 	{
-		return dob;
+		return prodUPC;
 	}
 
-	public void setDob(Date dob)
+	public void setProdUPC(String prodUPC)
 	{
-		this.dob = dob;
+		this.prodUPC = prodUPC;
 	}
 
-	public String getEmail()
-	{
-		return email;
-	}
-
-	public void setEmail(String email)
-	{
-		this.email = email;
-	}
-
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	public Address getAddress()
-	{
-		return address;
-	}
-
-	public void setAddress(Address address)
-	{
-		this.address = address;
-	}
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	public CreditCard getCreditCard()
-	{
-		return creditCard;
-	}
-
-	public void setCreditCard(CreditCard creditCard)
-	{
-		this.creditCard = creditCard;
-	}
 }
